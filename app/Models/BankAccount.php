@@ -7,5 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class BankAccount extends Model
 {
-    use HasFactory;
+    protected $fillable = ['user_id', 'balance'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
+

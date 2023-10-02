@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class SmsGateway extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name', 'api_key', 'api_secret'];
 }

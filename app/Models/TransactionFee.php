@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransactionFee extends Model
 {
-    use HasFactory;
+    protected $fillable = ['transaction_id', 'fee'];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 }

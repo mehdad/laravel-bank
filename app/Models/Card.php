@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Card extends Model
 {
-    use HasFactory;
+    protected $fillable = ['bank_account_id', 'card_number'];
+
+    public function bankAccount()
+    {
+        return $this->belongsTo(BankAccount::class);
+    }
 }

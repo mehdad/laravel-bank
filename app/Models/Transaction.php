@@ -7,5 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    use HasFactory;
+    protected $fillable = ['source_account_id', 'destination_account_id', 'amount'];
+
+    public function sourceAccount()
+    {
+        return $this->belongsTo(BankAccount::class, 'source_account_id');
+    }
+
+    public function destinationAccount()
+    {
+        return $this->belongsTo(BankAccount::class, 'destination_account_id');
+    }
+
+    public function transactionFee()
+    {
+        return $this->hasOne(TransactionFee::class);
+    }
 }
+
