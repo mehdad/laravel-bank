@@ -22,7 +22,7 @@ class TransactionController extends Controller
             return response()->json(['success' => 'Balance moved successfully']);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['error' => $e->getMessage()], 500);
+            throw $e;
         }
     }
 }

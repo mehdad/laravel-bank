@@ -14,13 +14,11 @@ class ApiExceptionHandler extends ExceptionHandler
     {
         if ($e instanceof ValidationException) {
             return response()->json($e->getMessage(), 422);
-        } elseif ($e instanceof HttpException && $e->getStatusCode() == 500) {
-            Log::error($e);
-            return response()->json([
-                'error' => 'Internal Server Error',
-                'message' => 'An unexpected error occurred.',
-            ], 500);
         }
-        return parent::render($request, $e);
+        Log::error($e);
+        return response()->json([
+            'error' => 'Internal Server Error',
+            'message' => 'An unexpected error occurred.',
+        ], 500);
     }
 }
