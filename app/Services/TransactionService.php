@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Services;
 
+use App\Exceptions\AssertException;
+use App\Models\BankAccount;
 use App\Models\Card;
 use App\Models\Transaction;
 use App\Models\TransactionFee;
@@ -8,16 +11,22 @@ use Exception;
 
 class TransactionService
 {
+    const TRANSACTION_FEE = 500;
+
     public function moveBalance($sourceCardNumber, $destinationCardNumber, $amount)
     {
-        $sourceAccount = Card::where('card_number', $sourceCardNumber)->first()->bankAccount;
-        $destinationAccount = Card::where('card_number', $destinationCardNumber)->first()->bankAccount;
+        $sourceAccount = $this->validateCardAndGetAccount($sourceCardNumber);
+        $destinationAccount = $this->validateCardAndGetAccount($destinationCardNumber);
 
-        if ($sourceAccount->balance < $amount) {
-            throw new Exception('Insufficient balance');
+        if ($sourceAccount == $destinationAccount) {
+            throw new AssertException('Source and destination account are the same');
         }
 
-        $sourceAccount->balance -= $amount;
+        if ($sourceAccount->balance < $amount + self::TRANSACTION_FEE) {
+            throw new AssertException('Insufficient balance');
+        }
+
+        $sourceAccount->balance -= $amount - self::TRANSACTION_FEE;
         $destinationAccount->balance += $amount;
 
         $sourceAccount->save();
@@ -31,9 +40,18 @@ class TransactionService
 
         TransactionFee::create([
             'transaction_id' => $transaction->id,
-            'fee' => 500
+            'fee' => self::TRANSACTION_FEE
         ]);
 
         return $transaction;
+    }
+
+    private function validateCardAndGetAccount(string $sourceCardNumber): BankAccount
+    {
+        $sourceCard = Card::where('card_number', $sourceCardNumber)->first();
+        if (is_null($sourceCard)) {
+            throw new AssertException("$sourceCardNumber is not registered as a card number in system");
+        }
+        return $sourceCard->bankAccount;
     }
 }
