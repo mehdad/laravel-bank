@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendMoneyRequest;
 use App\Services\TransactionService;
 use App\Services\NotificationService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
-    public function moveBalance(Request $request, TransactionService $transactionService, NotificationService $notificationService)
+    public function moveBalance(SendMoneyRequest $request, TransactionService $transactionService, NotificationService $notificationService)
     {
-        $request->validate([
-            'source_card_number' => 'required',
-            'destination_card_number' => 'required',
-            'amount' => 'required|numeric|min:0',
-        ]);
-
         DB::beginTransaction();
         try {
             $transaction = $transactionService->moveBalance($request->source_card_number, $request->destination_card_number, $request->amount);
