@@ -27,4 +27,13 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($this->isHttpException($exception)) {
+            return $this->renderHttpException($exception);
+        } else {
+            return app(ApiExceptionHandler::class)->render($request, $exception);
+        }
+    }
 }
