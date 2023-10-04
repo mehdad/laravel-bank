@@ -3,11 +3,10 @@
 namespace App\Services\Notification;
 
 use App\Jobs\SendSms;
-use Illuminate\Support\Facades\Queue;
 
 class NotificationService
 {
-    public function sendTransactionNotification($transaction)
+    public function sendTransactionNotification($transaction): void
     {
         $sourceAccount = $transaction->sourceAccount;
         $destinationAccount = $transaction->destinationAccount;
@@ -15,10 +14,14 @@ class NotificationService
         $sourceUser = $sourceAccount->user;
         $destinationUser = $destinationAccount->user;
 
-        $message = "You have sent {$transaction->amount} to {$destinationUser->name}.";
+        $message = __('sms.source.user.message',
+            ['amount' => $transaction->amount, 'source_user_name' => $destinationUser->name]
+        );
         SendSms::dispatch($sourceUser->phone_number, $message);
 
-        $message = "You have received {$transaction->amount} from {$sourceUser->name}.";
+        $message = __('sms.destination.user.message',
+            ['amount' => $transaction->amount, 'destination_user_name' => $destinationUser->name]
+        );
         SendSms::dispatch($sourceUser->phone_number, $message);
     }
 }
