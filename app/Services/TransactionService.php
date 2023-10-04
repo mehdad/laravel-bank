@@ -7,11 +7,46 @@ use App\Models\BankAccount;
 use App\Models\Card;
 use App\Models\Transaction;
 use App\Models\TransactionFee;
-use Exception;
+use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
     const TRANSACTION_FEE = 500;
+    const TOP_USERS_COUNT = 3;
+    const TRANSACTION_PER_EACH_USER = 10;
+    const TIME_LIMIT_IN_MINUTES = 10;
+
+    public function getTopTransactions(): array
+    {
+        $info = [];
+        $usersWithTransactionCount = DB::table('users')
+            ->join('bank_accounts', 'users.id', '=', 'bank_accounts.user_id')
+            ->join('transactions', 'bank_accounts.id', '=', 'transactions.source_account_id')
+            ->whereBetween('transactions.created_at', [now()->subMinutes(self::TIME_LIMIT_IN_MINUTES), now()])
+            ->groupBy('users.id')
+            ->selectRaw('users.id, COUNT(transactions.id) as transaction_count')
+            ->orderByDesc('transaction_count')
+            ->take(self::TOP_USERS_COUNT)
+            ->get();
+
+
+        foreach ($usersWithTransactionCount as $user) {
+            $userId = $user->id;
+            $transactions = DB::table('transactions')
+                ->join('bank_accounts', 'transactions.source_account_id', '=', 'bank_accounts.id')
+                ->where('user_id', $userId)
+                ->selectRaw('transactions.*')
+                ->latest('transactions.created_at')
+                ->take(self::TRANSACTION_PER_EACH_USER)
+                ->get();
+            $info[] = [
+                'user_id' => $user->id,
+                'transactions' => $transactions
+            ];
+        }
+        return $info;
+    }
+
 
     public function moveBalance($sourceCardNumber, $destinationCardNumber, $amount)
     {

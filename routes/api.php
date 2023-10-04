@@ -20,3 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/transactions/move-balance', [TransactionController::class, 'moveBalance']);
+
+Route::get('/transactions/', [TransactionController::class, 'index']);

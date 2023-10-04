@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SendMoneyRequest;
-use App\Services\TransactionService;
 use App\Services\Notification\NotificationService;
+use App\Services\TransactionService;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Request;
 
 class TransactionController extends Controller
 {
+    public function index(Request $request, TransactionService $transactionService)
+    {
+        return response()->json(['accounts' => $transactionService->getTopTransactions()]);
+    }
+
     public function moveBalance(SendMoneyRequest $request, TransactionService $transactionService, NotificationService $notificationService)
     {
         DB::beginTransaction();
