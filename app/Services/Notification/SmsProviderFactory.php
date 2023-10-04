@@ -8,8 +8,9 @@ use InvalidArgumentException;
 
 class SmsProviderFactory
 {
-    public static function create($type)
+    public static function create($type = null)
     {
+        $type = $type ?? config('sms.default');
         if ($type === 'kavenegar') {
             return new KavenegarProvider();
         }

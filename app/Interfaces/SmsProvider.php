@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface SmsProvider
 {
-    public function sendSms($number, $message);
+    public function sendSms($number, $message): bool;
 }

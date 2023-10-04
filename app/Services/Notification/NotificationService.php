@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Services\Notification;
 
-use Illuminate\Support\Facades\Log;
+use App\Jobs\SendSms;
+use Illuminate\Support\Facades\Queue;
 
 class NotificationService
 {
@@ -13,15 +15,11 @@ class NotificationService
         $sourceUser = $sourceAccount->user;
         $destinationUser = $destinationAccount->user;
 
-        $this->sendSms($sourceUser->phone_number, "You have sent {$transaction->amount} to {$destinationUser->name}.");
+        $message = "You have sent {$transaction->amount} to {$destinationUser->name}.";
+        SendSms::dispatch($sourceUser->phone_number, $message);
 
-        $this->sendSms($destinationUser->phone_number, "You have received {$transaction->amount} from {$sourceUser->name}.");
-    }
-
-    private function sendSms($phoneNumber, $message)
-    {
-        $smsProvider = SmsProviderFactory::create(config('sms.default'));
-        $smsProvider->sendSms($phoneNumber, $message);
+        $message = "You have received {$transaction->amount} from {$sourceUser->name}.";
+        SendSms::dispatch($sourceUser->phone_number, $message);
     }
 }
 
