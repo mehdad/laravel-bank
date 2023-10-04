@@ -48,6 +48,7 @@ class TransactionService
 
     private function validateCardAndGetAccount(string $sourceCardNumber): BankAccount
     {
+        $sourceCardNumber = TextService::convertDigitsToEnglish($sourceCardNumber);
         $sourceCard = Card::where('card_number', $sourceCardNumber)->first();
         if (is_null($sourceCard)) {
             throw new AssertException("$sourceCardNumber is not registered as a card number in system");

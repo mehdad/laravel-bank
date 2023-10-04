@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Services\TextService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -14,6 +15,7 @@ class CardNumberRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        $value = TextService::convertDigitsToEnglish($value);
         $sum = 0;
         for ($i = 0; $i < strlen($value); $i++) {
             if (($i + 1) % 2 == 0) {
