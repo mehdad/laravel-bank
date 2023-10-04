@@ -20,7 +20,7 @@ class NotificationService
 
     private function sendSms($phoneNumber, $message)
     {
-        $smsProvider = SmsProviderFactory::create('kavenegar');
+        $smsProvider = SmsProviderFactory::create(config('sms.default'));
         $smsProvider->sendSms($phoneNumber, $message);
     }
 }
