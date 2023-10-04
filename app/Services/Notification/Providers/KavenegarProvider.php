@@ -15,12 +15,12 @@ class KavenegarProvider implements SmsProvider
     {
         Log::info("Sending SMS to {$number}: {$message} from kavenegar");
         try {
-            $sender = config('sms.configs.sender');
+            $sender = config('sms.configs.kavenegar.sender');
             $receptor = array($number);
             $api = new KavenegarApi(config('sms.configs.kavenegar.api_key'));
             $api->Send($sender, $receptor, $message);
         } catch (\Exception $exception) {
-            Log::error($exception);
+            Log::log('Add to list again');
             throw $exception;
         }
     }

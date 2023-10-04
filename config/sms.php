@@ -12,8 +12,7 @@ return [
             'sender' => env('KAVENEGAR_SENDER'),
         ],
         'ghasedak' => [
-            'api_key' => env('GHASEDAK_API_KEY'),
-            'sender' => env('GHASEDAK_SENDER'),
+            'sender' => env('GHASEDAK_LINENUMBER'),
         ],
     ],
 ];
