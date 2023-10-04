@@ -17,7 +17,7 @@ class ApiExceptionHandler extends ExceptionHandler
         ) {
             return response()->json(
                 ['error' => $e->getMessage()],
-                $e->getCode()
+                422
             );
         } else {
             Log::error($e);
