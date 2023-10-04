@@ -3,15 +3,15 @@
 namespace App\Services\Notification;
 
 use App\Services\Notification\Providers\GhasedakProvider;
-use App\Services\Notification\Providers\KavehnegarProvider;
+use App\Services\Notification\Providers\KavenegarProvider;
 use InvalidArgumentException;
 
 class SmsProviderFactory
 {
     public static function create($type)
     {
-        if ($type === 'kavehnegar') {
-            return new KavehnegarProvider();
+        if ($type === 'kavenegar') {
+            return new KavenegarProvider();
         }
         if ($type === 'ghasedak') {
             return new GhasedakProvider();
