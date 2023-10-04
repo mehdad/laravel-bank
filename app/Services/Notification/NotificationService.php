@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Notification;
 
 use Illuminate\Support\Facades\Log;
 
@@ -20,7 +20,8 @@ class NotificationService
 
     private function sendSms($phoneNumber, $message)
     {
-        Log::info("Sending SMS to {$phoneNumber}: {$message}");
+        $smsProvider = SmsProviderFactory::create('kavenegar');
+        $smsProvider->sendSms($phoneNumber, $message);
     }
 }
 

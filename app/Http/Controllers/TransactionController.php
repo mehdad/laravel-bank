@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SendMoneyRequest;
 use App\Services\TransactionService;
-use App\Services\NotificationService;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
